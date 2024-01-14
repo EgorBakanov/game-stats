@@ -46,7 +46,7 @@ function fetchHl2bApi(name) {
     'Content-type': 'application/json;charset=UTF-8',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   };
-  return axios.post(`https://howlongtobeat.com/api/search`, body, {headers: headers}).then((response) => response.data);
+  return axios.post(`https://howlongtobeat.com/api/search`, body, { headers: headers }).then((response) => response.data);
 }
 
 app.get(
@@ -105,6 +105,13 @@ app.get(
     result.rating = Math.round((totalPositive / totalReviews) * 10000) / 100;
     result.totalTime = Math.ceil(comp100 / 3600);
     res.send(result);
+  })
+);
+
+app.get(
+  '/',
+  asyncHandler(async (req, res) => {
+    res.redirect('https://github.com/EgorBakanov/game-stats');
   })
 );
 
