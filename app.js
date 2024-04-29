@@ -57,7 +57,8 @@ app.get(
 
     if (Number.isNaN(steamId)) {
       result.message = 'Incorrect id';
-      return Pack(result);
+      res.send(result);
+      return;
     }
 
     const detailsData = await fetchSteamApi(`/api/appdetails?appids=${steamId}`);
@@ -81,8 +82,14 @@ app.get(
       return;
     }
 
-    const hl2bData = await fetchHl2bApi(name);
-    const howLong2Beat = hl2bData?.data.find((data) => data.profile_steam == steamId);
+    let hl2bData = await fetchHl2bApi(name);
+    let howLong2Beat = hl2bData?.data.find((data) => data.profile_steam == steamId);
+
+    if (!howLong2Beat && details.data.type == 'dlc' && details.data.fullgame?.name) {
+      const fullGameName = details.data.fullgame.name;
+      hl2bData = await fetchHl2bApi(fullGameName);
+      howLong2Beat = hl2bData?.data.find((data) => data.profile_steam == steamId);
+    }
 
     if (!howLong2Beat) {
       result.message = 'Game time not found';
